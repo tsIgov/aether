@@ -1,0 +1,67 @@
+#!/bin/sh
+
+set -e
+
+if command -v aether-system >/dev/null 2>&1; then
+	echo "Already installed";
+	exit 1;
+fi
+
+UPDATE=false
+
+for arg in $@; do
+	case $arg in
+		-u|--update)
+			UPDATE=true
+			;;
+		*)
+			echo "Invalid argument $arg"
+			exit 1
+		;;
+	esac
+done
+
+NIXOS_VERSION=$(nixos-version | head -c 5)
+USERNAME=$(getent passwd $USER | cut -d: -f5)
+SCRIPT=$(realpath "$0")
+SCRIPTPATH=$(dirname "$SCRIPT")
+
+sudo rm -rf /etc/nixos
+sudo rm -rf /etc/aether
+sudo mkdir /etc/aether
+sudo mkdir /etc/aether/system-config
+
+sudo ln -s $SCRIPTPATH /etc/aether/src
+
+sudo echo "{ ... }:
+{ 
+	system.stateVersion = \"$NIXOS_VERSION\"; 
+}" | sudo tee /etc/aether/system-config/configuration.nix >> /dev/null
+
+	sudo echo "{ ... }:
+{ 
+	users.mutableUsers = true;
+	users.users.\"$USER\" = {
+		description = \"$USERNAME\";
+		extraGroups = [ \"wheel\" \"networkmanager\"];
+		isNormalUser = true;
+		createHome = true;
+		useDefaultShell = true;
+	};
+}" | sudo tee /etc/aether/system-config/users.nix >> /dev/null
+
+sudo echo "{ ... }:
+{ 
+	networking.hostName = \"$(hostname)\";
+}" | sudo tee /etc/aether/system-config/networking.nix >> /dev/null
+
+sudo nixos-generate-config --dir /etc/aether/system-config
+
+if [[ $UPDATE == true ]]; then
+	sudo rm -f /etc/aether/src/flake.lock
+fi
+
+sudo nixos-rebuild switch --flake $(readlink -f /etc/aether/src)/system/.#aether --impure
+
+echo "Instalation complete. Please, reboot the system."
+
