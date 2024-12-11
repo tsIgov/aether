@@ -51,14 +51,6 @@ Recolor the GTK theme
 
 ## Installation 
 Locale should be configured per user
-
 Remove the default values of user options?
-
-User settings, packages and flakes should be outside of the repo (in another one?)
+Add an option for hostname
 Parts of the user modules related to the desktop environment should be in aether
-Installing should deal with home manager as well
-Script option to install home manager for user
-Deal with home-manager.nix
-Deal with system/modules/config.nix
-Delete the old repo and files
-Fix the symlink

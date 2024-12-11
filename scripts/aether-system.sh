@@ -87,6 +87,7 @@ apply() {
 	done
 
 	echo "Applying system configuration..."
+	sudo nixos-generate-config --dir /etc/aether/state
 	sudo nixos-rebuild switch --flake $FLAKE_DIR/.#aether --impure
 	echo "System configuration applied."
 }

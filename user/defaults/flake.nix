@@ -8,8 +8,7 @@
 			inputs.nixpkgs.follows = "nixpkgs";
 		};
 
-		digital-brain.url = "github:nixos/nixpkgs/nixos-unstable";
-		software-development.url = "github:nixos/nixpkgs/nixos-unstable";
+		#package-group-1.url = "github:nixos/nixpkgs/nixos-unstable";
 	};
 
 	outputs = { self, nixpkgs, home-manager, ... } @inputs:
@@ -22,8 +21,7 @@
 
 		overlay-packages = final: prev: {
 			custom = import /etc/aether/src/custom-packages/default.nix { inherit pkgs; };
-			digital-brain = importPackages inputs.digital-brain;
-			software-development = importPackages inputs.software-development;
+			#package-group-1 = importPackages inputs.package-group-1;
 		};
 
 	in {
@@ -31,7 +29,12 @@
 			"aether" = home-manager.lib.homeManagerConfiguration {
 				pkgs = pkgs;
 				extraSpecialArgs = { };
-				modules = [ ({ ... }: { nixpkgs.overlays = [ overlay-packages ]; }) ] ++ (importModules /etc/aether/src/user/modules);
+				modules = [ 
+					({ ... }: { nixpkgs.overlays = [ overlay-packages ]; }) ] ++ 
+					(importModules /etc/aether/src/user/modules) ++ 
+					(importModules ~/.config/aether/modules) ++ [
+					~/.config/aether/config.nix
+				];
 			};
 		};
 	};
