@@ -136,7 +136,7 @@ update() {
 	done
 
 	if [[ $NEXT_INPUT == "list" && $LIST == "" ]]; then
-		nix flake metadata $FLAKE_DIR/ --impure --json | jq -r '.locks.nodes.root.inputs | keys[]' | grep -Ev '^(nixpkgs|home-manager)$'
+		nix flake metadata $FLAKE_DIR/ --impure --json | jq -r '.locks.nodes.root.inputs | keys[]' | grep -Ev '^(home-manager)$'
 		exit 0;
 	fi
 

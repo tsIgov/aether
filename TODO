@@ -51,6 +51,10 @@ Recolor the GTK theme
 
 ## Installation 
 Locale should be configured per user
+
 Remove the default values of user options?
 Add an option for hostname
-Parts of the user modules related to the desktop environment should be in aether
+
+Home manager should not install packages related to the desktop environment
+
+Make the config repository private
