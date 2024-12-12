@@ -1,8 +1,8 @@
 #!/bin/sh
 
 show_help() {
-	echo "Usage: $0 [ARGS] PATH"
-	echo "Installs the aether desktop environment storing the system configuration files in PATH. If PATH does not exist it will be created. It will not override existing configuration."
+	echo "Usage: $0 [ARGS]"
+	echo "Installs the aether desktop environment."
 	echo
 	echo "Arguments:"
 	echo -e "-u | --update \t Uses the newest version of all packages."
@@ -17,7 +17,6 @@ if command -v aether-system >/dev/null 2>&1; then
 fi
 
 UPDATE=false
-CONFIG_PATH=""
 
 for arg in $@; do
 	case $arg in
@@ -29,34 +28,24 @@ for arg in $@; do
 			exit 0
 		;;
 		*)
-			if [[ $CONFIG_PATH == "" ]]; then
-				CONFIG_PATH=$arg
-			else
-				echo "Invalid argument $arg"
-				exit 1
-			fi
+			echo "Invalid argument $arg"
+			exit 1
 		;;
 	esac
 done
-
-if [[ $CONFIG_PATH == "" ]]; then
-	show_help
-	exit 1
-fi
 
 NIXOS_VERSION=$(nixos-version | head -c 5)
 USERNAME=$(getent passwd $USER | cut -d: -f5)
 SCRIPT=$(realpath "$0")
 SCRIPTPATH=$(dirname "$SCRIPT")
+CONFIG_PATH=/etc/aether/config
 
 sudo rm -rf /etc/nixos
-sudo rm -rf /etc/aether
-sudo mkdir /etc/aether
-sudo mkdir /etc/aether/state
-sudo mkdir -p $CONFIG_PATH
+sudo mkdir -p /etc/aether
+sudo mkdir -p /etc/aether/state
+sudo mkdir -p /etc/aether/config
 
 sudo ln -s $SCRIPTPATH /etc/aether/src
-sudo ln -s $CONFIG_PATH /etc/aether/config
 
 sudo echo "{ ... }:
 { 
@@ -65,13 +54,11 @@ sudo echo "{ ... }:
 
 sudo nixos-generate-config --dir /etc/aether/state
 
-if [ ! -e "$CONFIG_PATH/users.nix" ]; then
+if [ ! -e $CONFIG_PATH ]; then
 	sudo cp $SCRIPTPATH/system/defaults/users.nix $CONFIG_PATH/users.nix
 	sudo sed -i "s|{{user}}|$USER|g" $CONFIG_PATH/users.nix
 	sudo sed -i "s|{{username}}|$USERNAME|g" $CONFIG_PATH/users.nix
-fi
 
-if [ ! -e "$CONFIG_PATH/config.nix" ]; then
 	sudo cp $SCRIPTPATH/system/defaults/config.nix $CONFIG_PATH/config.nix
 	sudo sed -i "s|{{hostname}}|$(hostname)|g" $CONFIG_PATH/config.nix
 fi

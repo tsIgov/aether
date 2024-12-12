@@ -57,4 +57,4 @@ Add an option for hostname
 
 Home manager should not install packages related to the desktop environment
 
-Make the config repository private
+Keyring?

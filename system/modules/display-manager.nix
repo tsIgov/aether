@@ -4,6 +4,8 @@
     greetd.tuigreet
   ];
 
+  services.gnome.gnome-keyring.enable = true;
+
   services.greetd = {
     enable = true;
     settings = {
