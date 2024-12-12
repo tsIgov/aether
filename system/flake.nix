@@ -17,12 +17,10 @@
 		nixosConfigurations = {
 			"aether" = nixpkgs.lib.nixosSystem {
 				specialArgs = { };
-				modules = (importModules /etc/aether/src/system/modules) ++ [ 
-					/etc/aether/state/configuration.nix
-					/etc/aether/state/hardware-configuration.nix
-					/etc/aether/config/config.nix
-					/etc/aether/config/users.nix 
-				];
+				modules = 
+					(importModules /etc/aether/src/system/modules) ++ 
+					(importModules /etc/aether/state) ++ 
+					(importModules /etc/aether/config);
 			};
 		};
 	};

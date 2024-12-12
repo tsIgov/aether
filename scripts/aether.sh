@@ -230,7 +230,7 @@ set -e
 
 handle_help_arg $@
 
-FLAKE_DIR=$HOME/.config/aether
+FLAKE_DIR=$(realpath $HOME/.config/aether)
 
 case $1 in
 	apply)

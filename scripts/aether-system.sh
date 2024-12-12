@@ -199,7 +199,7 @@ set -e
 
 handle_help_arg $@
 
-FLAKE_DIR=$(readlink -f /etc/aether/src)/system
+FLAKE_DIR=$(realpath /etc/aether/src/system)
 
 case $1 in
 	apply)
