@@ -97,9 +97,9 @@ sudo mkdir -p /etc/aether
 sudo ln -s $SCRIPTPATH /etc/aether/src
 
 prepare_system_config
-apply_system_config
-
 prepare_user_config
+
+apply_system_config
 apply_user_config
 
 echo "Instalation complete. Please, reboot the system."

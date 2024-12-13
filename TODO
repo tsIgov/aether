@@ -54,6 +54,7 @@ Locale should be configured per user
 
 Remove the default values of user options?
 Add an option for hostname
+Make users imutable
 
 Home manager should not install packages related to the desktop environment
 
