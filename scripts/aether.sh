@@ -88,18 +88,6 @@ apply() {
 	done
 
 	echo "Applying user configuration..."
-
-	if [ ! -d "$FLAKE_DIR" ]; then
-		mkdir -p $HOME/.config/aether/modules
-
-		cp /etc/aether/src/user/defaults/home-manager.nix $HOME/.config/aether/modules/home-manager.nix
-		sed -i "s|{{user}}|$USER|g" $HOME/.config/aether/modules/home-manager.nix
-		sed -i "s|{{home}}|$HOME|g" $HOME/.config/aether/modules/home-manager.nix
-
-		cp /etc/aether/src/user/defaults/config.nix $HOME/.config/aether/config.nix
-		cp /etc/aether/src/user/defaults/flake.nix $HOME/.config/aether/flake.nix
-	fi
-
 	home-manager switch --flake $FLAKE_DIR/.#aether --impure
 	hyprctl reload || true
 	echo "User configuration applied."
